@@ -171,7 +171,8 @@ async function openMovieInNewTab(movieId) {
     const imdbID = movie.imdb_id;
 
     if (imdbID) {
-        window.open(`https://vidsrc.net/embed/${imdbID}`, '_blank');
+        window.open(`https://vidsrc.xyz/embed/movie/${imdbID}`, '_blank');
+        //window.open(`https://vidsrc.net/embed/${imdbID}`, '_blank');
         // window.open(`https://play2.123embed.net/movie/${imdbID}`, '_blank');
     } else {
         alert('No IMDb ID found for this movie.');
