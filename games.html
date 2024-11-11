@@ -66,36 +66,51 @@
             flex-direction: column;
             align-items: center;
             background-color: #333;
-            padding: 15px;
             border-radius: 10px;
+            overflow: hidden;
             transition: transform 0.2s;
         }
         .game-card:hover {
             transform: scale(1.05);
         }
-        /* Game image styling */
+        /* Game image styling with gradient overlay */
         .game-card img {
             width: 100%;
-            height: 150px;
+            height: 200px;
             object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            display: block;
+        }
+        .image-overlay {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, transparent, rgba(51, 51, 51, 0.9));
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
         /* Game button styling */
         .game-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1em;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
             color: #fff;
             background-color: #04d9ff;
             border: none;
-            border-radius: 5px;
+            border-radius: 0 0 10px 10px;
             text-decoration: none;
+            text-align: center;
             transition: background-color 0.3s ease;
         }
         /* Hover effect for buttons */
         .game-btn:hover {
             background-color: #03a6cc;
+        }
+        /* Container for the image and overlay */
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
         }
     </style>
     <script>
@@ -120,22 +135,34 @@
         <div class="game-list">
             <!-- Game 1 -->
             <div class="game-card" data-title="Goat Simulator">
-                <img src="goatsimpic.jpg" alt="Goat Simulator">
+                <div class="image-container">
+                    <img src="goatsimpic.jpg" alt="Goat Simulator">
+                    <div class="image-overlay"></div>
+                </div>
                 <a href="goatsim.html" class="game-btn">Goat Simulator</a>
             </div>
             <!-- Game 2 -->
             <div class="game-card" data-title="Game 2">
-                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 2">
+                <div class="image-container">
+                    <img src="game2.jpg" alt="Game 2">
+                    <div class="image-overlay"></div>
+                </div>
                 <a href="#" class="game-btn">Game 2</a>
             </div>
             <!-- Game 3 -->
             <div class="game-card" data-title="Game 3">
-                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 3">
+                <div class="image-container">
+                    <img src="game3.jpg" alt="Game 3">
+                    <div class="image-overlay"></div>
+                </div>
                 <a href="#" class="game-btn">Game 3</a>
             </div>
             <!-- Game 4 -->
             <div class="game-card" data-title="Game 4">
-                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 4">
+                <div class="image-container">
+                    <img src="game4.jpg" alt="Game 4">
+                    <div class="image-overlay"></div>
+                </div>
                 <a href="#" class="game-btn">Game 4</a>
             </div>
             <!-- Add more games as needed -->
