@@ -56,7 +56,6 @@
             align-items: center;
             gap: 20px;
             margin-bottom: 20px;
-            flex-direction: column; /* Stack the buttons vertically */
         }
 
         /* Button styling */
@@ -86,6 +85,34 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
+        /* Smaller button underneath Movies */
+        .btn-small {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #ff6347; /* Different color for distinction */
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            width: 40%;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-top: 10px; /* Space between Movies button and Shows button */
+        }
+
+        /* Smaller button hover effects */
+        .btn-small:hover {
+            background-color: #e5533b;
+            transform: scale(1.05);
+        }
+
+        /* Active smaller button press effect */
+        .btn-small:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
         /* Logo image styling */
         .logo {
             width: 100px; /* Adjust width as needed */
@@ -108,9 +135,9 @@
             <!-- SVN SEES Logo Image -->
             <img src="svnseaslogo.png" alt="SVN SEES Logo" class="logo">
             <a href="movies.html" class="btn">Movies</a>
-            <!-- Shows Button -->
-            <a href="shows.html" class="btn">Shows</a>
         </div>
+        <!-- Smaller button below Movies -->
+        <a href="shows.html" class="btn-small">Shows</a>
         <p>Choose your category to explore more!</p>
     </div>
 </body>
