@@ -106,7 +106,10 @@
         const apiKey = '309fabbe'; // Your OMDb API key
         const movieList = document.querySelector('.movie-list');
 
-        // Function to fetch movie data from OMDb API
+        // Default top 3 movies that will be shown initially
+        const defaultMovies = ["The Matrix", "Inception", "The Dark Knight"];
+
+        // Fetch movie data from OMDb API
         function fetchMovieData(title) {
             fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apiKey}`)
                 .then(response => response.json())
@@ -122,7 +125,7 @@
                 });
         }
 
-        // Create a movie card dynamically
+        // Create movie card dynamically
         function createMovieCard(data) {
             const movieCard = document.createElement('div');
             movieCard.classList.add('movie-card');
@@ -150,13 +153,13 @@
             movieList.appendChild(movieCard);
         }
 
-        // Function to show the movie via 123embed.net
+        // Show the movie via 123embed.net
         function showMovie(imdbID) {
             const container = document.querySelector('.container');
             container.innerHTML = `<iframe src="https://play2.123embed.net/movie/${imdbID}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
         }
 
-        // Function to filter movies by search term
+        // Filter movies by search term
         function filterMovies() {
             const searchTerm = document.getElementById('searchBar').value.toLowerCase();
             const movieCards = document.querySelectorAll('.movie-card');
@@ -167,12 +170,9 @@
             });
         }
 
-        // Load sample movies (or you can dynamically add more)
+        // Initialize the page with top 3 movies
         window.onload = () => {
-            fetchMovieData("The Matrix");
-            fetchMovieData("Inception");
-            fetchMovieData("The Dark Knight");
-            fetchMovieData("Avengers: Endgame");
+            defaultMovies.forEach(title => fetchMovieData(title));
         };
     </script>
 </head>
@@ -182,7 +182,7 @@
         <input type="text" id="searchBar" oninput="filterMovies()" placeholder="Search for a movie...">
 
         <div class="movie-list">
-            <!-- Movie Cards will be displayed here dynamically -->
+            <!-- Default top 3 movies will be displayed here -->
         </div>
     </div>
 </body>
