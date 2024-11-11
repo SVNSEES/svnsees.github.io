@@ -106,18 +106,22 @@
         const apiKey = '309fabbe'; // Your OMDb API key
         const movieList = document.querySelector('.movie-list');
 
-        // Default top 3 movies that will be shown initially
-        const defaultMovies = ["The Matrix", "Inception", "The Dark Knight"];
+        // Top 3 movies with predefined IMDb IDs (no API required)
+        const topMovies = [
+            { title: "The Matrix", imdbID: "tt0106062" },
+            { title: "Star Wars: Episode IV - A New Hope", imdbID: "tt0076759" },
+            { title: "Harry Potter and the Deathly Hallows: Part 2", imdbID: "tt1201607" }
+        ];
 
         // Fetch movie data from OMDb API
-        function fetchMovieData(title) {
-            fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apiKey}`)
+        function fetchMovieData(imdbID) {
+            fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.Response === "True") {
                         createMovieCard(data);
                     } else {
-                        console.error('Movie not found:', title);
+                        console.error('Movie not found:', imdbID);
                     }
                 })
                 .catch(error => {
@@ -172,7 +176,7 @@
 
         // Initialize the page with top 3 movies
         window.onload = () => {
-            defaultMovies.forEach(title => fetchMovieData(title));
+            topMovies.forEach(movie => fetchMovieData(movie.imdbID));
         };
     </script>
 </head>
@@ -182,7 +186,7 @@
         <input type="text" id="searchBar" oninput="filterMovies()" placeholder="Search for a movie...">
 
         <div class="movie-list">
-            <!-- Default top 3 movies will be displayed here -->
+            <!-- Top 3 movies will be displayed here -->
         </div>
     </div>
 </body>
