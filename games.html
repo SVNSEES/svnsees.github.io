@@ -20,7 +20,8 @@
             height: 100vh;
             background: linear-gradient(135deg, #222, #333, #444);
             color: #fff;
-            overflow: hidden;
+            overflow-y: auto;
+            padding: 20px;
         }
         /* Main content container */
         .container {
@@ -29,7 +30,7 @@
             background-color: rgba(51, 51, 51, 0.9);
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
+            max-width: 700px;
             width: 90%;
         }
         /* Page title styling */
@@ -51,17 +52,29 @@
             gap: 20px;
             margin-top: 30px;
         }
+        /* Game item styling */
+        .game-item {
+            text-align: center;
+        }
+        /* Game image styling */
+        .game-image {
+            width: 100%;
+            max-width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
         /* Game button styling */
         .game-btn {
-            display: block;
-            padding: 15px 25px;
-            font-size: 1.5em;
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
             color: #fff;
             background-color: #04d9ff;
             border: none;
             border-radius: 5px;
             text-decoration: none;
-            text-align: center;
             transition: background-color 0.3s ease, transform 0.1s ease;
         }
         /* Hover effect for buttons */
@@ -86,13 +99,26 @@
     <div class="container">
         <h1>SVN SEES - Games</h1>
         <div class="game-list">
-            <!-- Link to Goat Simulator page -->
-            <a href="goatsim.html" class="game-btn">Goat Simulator</a>
-            
-            <!-- Add more games here -->
-            <a href="#" class="game-btn">Game 2</a>
-            <a href="#" class="game-btn">Game 3</a>
-            <a href="#" class="game-btn">Game 4</a>
+            <!-- Goat Simulator -->
+            <div class="game-item">
+                <img src="goat_sim_image.jpg" alt="Goat Simulator" class="game-image">
+                <a href="goatsim.html" class="game-btn">Goat Simulator</a>
+            </div>
+            <!-- Game 2 -->
+            <div class="game-item">
+                <img src="game2_image.jpg" alt="Game 2" class="game-image">
+                <a href="game2.html" class="game-btn">Game 2</a>
+            </div>
+            <!-- Game 3 -->
+            <div class="game-item">
+                <img src="game3_image.jpg" alt="Game 3" class="game-image">
+                <a href="game3.html" class="game-btn">Game 3</a>
+            </div>
+            <!-- Game 4 -->
+            <div class="game-item">
+                <img src="game4_image.jpg" alt="Game 4" class="game-image">
+                <a href="game4.html" class="game-btn">Game 4</a>
+            </div>
         </div>
         <p>Select a game to explore or download!</p>
     </div>
