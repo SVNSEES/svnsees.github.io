@@ -52,8 +52,10 @@
         /* Buttons container */
         .button-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            align-items: center;
             gap: 20px;
+            margin-bottom: 20px;
         }
 
         /* Button styling */
@@ -83,6 +85,12 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
+        /* Logo image styling */
+        .logo {
+            width: 100px; /* Adjust width as needed */
+            height: auto;
+        }
+
         /* Subtitle styling (optional) */
         p {
             margin-top: 20px;
@@ -96,6 +104,8 @@
         <h1>SVN SEES</h1>
         <div class="button-container">
             <a href="games.html" class="btn">Games</a>
+            <!-- SVN SEES Logo Image -->
+            <img src="svnseaslogo.jpg" alt="SVN SEES Logo" class="logo">
             <a href="movies.html" class="btn">Movies</a>
         </div>
         <p>Choose your category to explore more!</p>
