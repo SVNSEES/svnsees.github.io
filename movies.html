@@ -103,25 +103,38 @@
         }
     </style>
     <script>
-        const apiKey = '309fabbe'; // Your OMDb API key
+        const apiKey = '330845779e6588abc657b964887317fb'; // TMDb API key
         const movieList = document.querySelector('.movie-list');
 
-        // Top 3 movies with predefined IMDb IDs (no API required)
+        // Default top 3 movies (hard-coded) with TMDb ID
         const topMovies = [
-            { title: "The Matrix", imdbID: "tt0106062" },
-            { title: "Star Wars: Episode IV - A New Hope", imdbID: "tt0076759" },
-            { title: "Harry Potter and the Deathly Hallows: Part 2", imdbID: "tt1201607" }
+            {
+                title: "The Matrix",
+                tmdbID: "603",
+                poster: "https://www.themoviedb.org/t/p/w300/e5u6zJK2pykZWL3COwGAkQnDFph.jpg"
+            },
+            {
+                title: "Star Wars: Episode IV - A New Hope",
+                tmdbID: "11",
+                poster: "https://www.themoviedb.org/t/p/w300/dy2lKnpHltvLOmhHYrfRZ7wfe7g.jpg"
+            },
+            {
+                title: "Harry Potter and the Deathly Hallows: Part 2",
+                tmdbID: "12445",
+                poster: "https://www.themoviedb.org/t/p/w300/fjGRgk9nYKlN6gAOpQpPHF1YfRr.jpg"
+            }
         ];
 
-        // Fetch movie data from OMDb API
-        function fetchMovieData(imdbID) {
-            fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`)
+        // Fetch movie data from TMDb API for search results
+        function fetchMovieData(title) {
+            fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(title)}&language=en-US&page=1`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.Response === "True") {
-                        createMovieCard(data);
+                    if (data.results && data.results.length > 0) {
+                        movieList.innerHTML = ''; // Clear previous search results
+                        data.results.forEach(movie => createMovieCard(movie));
                     } else {
-                        console.error('Movie not found:', imdbID);
+                        console.log('No results found');
                     }
                 })
                 .catch(error => {
@@ -133,13 +146,13 @@
         function createMovieCard(data) {
             const movieCard = document.createElement('div');
             movieCard.classList.add('movie-card');
-            movieCard.setAttribute('data-title', data.Title);
+            movieCard.setAttribute('data-title', data.title);
 
             const imageContainer = document.createElement('div');
             imageContainer.classList.add('image-container');
             const img = document.createElement('img');
-            img.src = data.Poster !== "N/A" ? data.Poster : 'fallback-image.jpg'; // Fallback image if poster not available
-            img.alt = data.Title;
+            img.src = data.poster_path ? `https://www.themoviedb.org/t/p/w300${data.poster_path}` : 'fallback-image.jpg'; // Fallback image
+            img.alt = data.title;
             imageContainer.appendChild(img);
 
             const overlay = document.createElement('div');
@@ -149,8 +162,8 @@
             const movieBtn = document.createElement('a');
             movieBtn.href = "#";
             movieBtn.classList.add('movie-btn');
-            movieBtn.innerText = data.Title;
-            movieBtn.onclick = () => showMovie(data.imdbID);
+            movieBtn.innerText = data.title;
+            movieBtn.onclick = () => showMovie(data.id);
 
             movieCard.appendChild(imageContainer);
             movieCard.appendChild(movieBtn);
@@ -158,9 +171,9 @@
         }
 
         // Show the movie via 123embed.net
-        function showMovie(imdbID) {
+        function showMovie(tmdbID) {
             const container = document.querySelector('.container');
-            container.innerHTML = `<iframe src="https://play2.123embed.net/movie/${imdbID}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
+            container.innerHTML = `<iframe src="https://play2.123embed.net/movie/${tmdbID}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
         }
 
         // Filter movies by search term
@@ -174,19 +187,33 @@
             });
         }
 
-        // Initialize the page with top 3 movies
+        // Initialize the page with top 3 movies and allow searching
         window.onload = () => {
-            topMovies.forEach(movie => fetchMovieData(movie.imdbID));
+            // Display top 3 movies
+            topMovies.forEach(movie => createMovieCard(movie));
+
+            // Initialize with a search functionality for other movies
+            document.getElementById('searchBar').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                if (searchTerm) {
+                    movieList.innerHTML = '';  // Clear movie list for search results
+                    fetchMovieData(searchTerm);  // Search for movies
+                } else {
+                    // Re-display the top movies if the search bar is cleared
+                    movieList.innerHTML = '';
+                    topMovies.forEach(movie => createMovieCard(movie));
+                }
+            });
         };
     </script>
 </head>
 <body>
     <div class="container">
         <h1>SVN SEES - Movies</h1>
-        <input type="text" id="searchBar" oninput="filterMovies()" placeholder="Search for a movie...">
+        <input type="text" id="searchBar" placeholder="Search for a movie...">
 
         <div class="movie-list">
-            <!-- Top 3 movies will be displayed here -->
+            <!-- Default top 3 movies will be displayed here -->
         </div>
     </div>
 </body>
