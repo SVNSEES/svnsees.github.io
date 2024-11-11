@@ -1,197 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVN SEES - Movies</title>
-    <style>
-        /* Reset styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        /* Full-page gradient background */
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #222, #333, #444);
-            color: #fff;
-            overflow: auto;
-            position: relative;
-        }
-        /* Main content container */
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: rgba(51, 51, 51, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
-            width: 90%;
-        }
-        /* Page title styling */
-        h1 {
-            font-size: 2.5em;
-            color: #04d9ff;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
-        }
-        /* Hover effect for title */
-        h1:hover {
-            color: #ff00ff;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
-        }
-        /* Search bar styling */
-        #search-input {
-            width: 80%;
-            padding: 10px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            outline: none;
-        }
-        /* Movie list styling */
-        .movie-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        /* Movie card styling */
-        .movie-item {
-            width: 200px;
-            height: 280px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #333;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-        .movie-item:hover {
-            transform: scale(1.05);
-        }
-        /* Movie image styling */
-        .movie-item img {
-            width: 100%;
-            height: 70%;
-            object-fit: cover;
-        }
-        .movie-item h3 {
-            font-size: 1.1em;
-            margin-top: 10px;
-        }
-        /* Hide iframe (no longer necessary) */
-        #movie-player {
-            display: none;
-        }
-    </style>
-</head>
-<body>
+const apiKey = '330845779e6588abc657b964887317fb'; // TMDb API key
+const trendingApiUrl = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
+const searchApiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=`;
 
-    <div class="container">
-        <h1>SVN SEES - Movies</h1>
-        <!-- Search Bar -->
-        <input type="text" id="search-input" placeholder="Search for a movie...">
+const searchInput = document.getElementById('search-input');
+const movieList = document.getElementById('movie-list');
+const trendingMoviesList = document.getElementById('trending-movies');
 
-        <!-- Trending Movies Section -->
-        <h2>Trending Movies</h2>
-        <div class="movie-list" id="trending-movies"></div>
+// Fetch Trending Movies and display them first
+async function fetchTrendingMovies() {
+    const response = await fetch(trendingApiUrl);
+    const data = await response.json();
+    const trendingMovies = data.results;
+    displayMovies(trendingMovies, trendingMoviesList);
+}
 
-        <!-- Movie List -->
-        <div class="movie-list" id="movie-list"></div>
-    </div>
+// Fetch and display movies based on search query
+async function fetchMovies(query) {
+    const response = await fetch(`${searchApiUrl}${encodeURIComponent(query)}`);
+    const data = await response.json();
+    const movies = data.results;
+    displayMovies(movies, movieList);
+}
 
-    <script>
-        const apiKey = '330845779e6588abc657b964887317fb'; // TMDb API key
-        const trendingApiUrl = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
-        const searchApiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=`;
+// Function to display movie cards
+function displayMovies(movies, listElement) {
+    listElement.innerHTML = ''; // Clear previous results
 
-        const searchInput = document.getElementById('search-input');
-        const movieList = document.getElementById('movie-list');
-        const trendingMoviesList = document.getElementById('trending-movies');
+    if (movies.length === 0) {
+        listElement.innerHTML = '<p>No movies found!</p>';
+        return;
+    }
 
-        // Fetch Trending Movies and display them first
-        async function fetchTrendingMovies() {
-            const response = await fetch(trendingApiUrl);
-            const data = await response.json();
-            const trendingMovies = data.results;
-            displayMovies(trendingMovies, trendingMoviesList);
-        }
+    movies.forEach(movie => {
+        const movieItem = document.createElement('div');
+        movieItem.classList.add('movie-item');
+        movieItem.dataset.id = movie.id;
 
-        // Fetch and display movies based on search query
-        async function fetchMovies(query) {
-            const response = await fetch(`${searchApiUrl}${encodeURIComponent(query)}`);
-            const data = await response.json();
-            const movies = data.results;
-            displayMovies(movies, movieList);
-        }
+        const poster = `https://image.tmdb.org/t/p/w200${movie.poster_path || ''}`;
+        const title = movie.title || 'Unknown Title';
 
-        // Function to display movie cards
-        function displayMovies(movies, listElement) {
-            listElement.innerHTML = ''; // Clear previous results
+        movieItem.innerHTML = `
+            <img src="${poster}" alt="${title}">
+            <h3>${title}</h3>
+        `;
 
-            if (movies.length === 0) {
-                listElement.innerHTML = '<p>No movies found!</p>';
-                return;
-            }
-
-            movies.forEach(movie => {
-                const movieItem = document.createElement('div');
-                movieItem.classList.add('movie-item');
-                movieItem.dataset.id = movie.id;
-
-                const poster = `https://image.tmdb.org/t/p/w200${movie.poster_path || ''}`;
-                const title = movie.title || 'Unknown Title';
-
-                movieItem.innerHTML = `
-                    <img src="${poster}" alt="${title}">
-                    <h3>${title}</h3>
-                `;
-
-                movieItem.addEventListener('click', () => {
-                    openMovieInNewTab(movie.id);
-                });
-
-                listElement.appendChild(movieItem);
-            });
-        }
-
-        // Open movie in a new tab by IMDb ID
-        async function openMovieInNewTab(movieId) {
-            const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`);
-            const movie = await response.json();
-            const imdbID = movie.imdb_id;
-
-            if (imdbID) {
-                window.open(`https://play2.123embed.net/movie/${imdbID}`, '_blank');
-            } else {
-                alert('No IMDb ID found for this movie.');
-            }
-        }
-
-        // Event listeners
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.trim();
-            if (query) {
-                fetchMovies(query);
-            } else {
-                // Reset movie list if the search is empty
-                movieList.innerHTML = '';
-            }
+        movieItem.addEventListener('click', () => {
+            openMovieInNewTab(movie.id);
         });
 
-        // Fetch trending movies on page load
-        fetchTrendingMovies();
+        listElement.appendChild(movieItem);
+    });
+}
 
-    </script>
+// Open movie in a new tab by IMDb ID
+async function openMovieInNewTab(movieId) {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`);
+    const movie = await response.json();
+    const imdbID = movie.imdb_id;
 
-</body>
-</html>
+    if (imdbID) {
+        window.open(`https://play2.123embed.net/movie/${imdbID}`, '_blank');
+    } else {
+        alert('No IMDb ID found for this movie.');
+    }
+}
+
+// Event listeners
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim();
+    
+    // If there is a query, hide the trending movies and show search results
+    if (query) {
+        trendingMoviesList.style.display = 'none';
+        fetchMovies(query);
+    } else {
+        // If there's no query, show the trending movies again
+        trendingMoviesList.style.display = 'block';
+        movieList.innerHTML = ''; // Clear any previous search results
+    }
+});
+
+// Fetch trending movies on page load
+fetchTrendingMovies();
