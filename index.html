@@ -22,6 +22,7 @@
             background: linear-gradient(135deg, #222, #333, #444);
             color: #fff;
             overflow: hidden;
+            position: relative;
         }
 
         /* Fade-in effect for container */
@@ -52,6 +53,7 @@
             color: #04d9ff;
             margin-bottom: 10px;
             position: relative;
+            transition: color 0.3s ease;
         }
 
         /* Subtitle styling */
@@ -59,6 +61,12 @@
             margin-bottom: 20px;
             color: #bbb;
             font-size: 1.1em;
+        }
+
+        /* Hover effect for title */
+        h1:hover {
+            color: #ff00ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
         }
 
         /* Animated download icon */
@@ -97,6 +105,12 @@
             background-color: #03a6cc;
             transform: scale(1.05);
         }
+
+        /* Active button press effect */
+        .download-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -104,7 +118,7 @@
         <!-- Animated download icon -->
         <div class="icon">⬇️</div>
         <h1>SVN SEES</h1>
-        <p>Get Goat Simulator Remastered (v1.0) - Gofile - torrent</p>
+        <p>Get Goat Simulator Remastered (v1.0) - no virus, trust bro!</p>
         <a href="https://gofile.io/d/t6i6Q9" class="download-btn" target="_blank">Download Goat Simulator</a>
     </div>
 </body>
