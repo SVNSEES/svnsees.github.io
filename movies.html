@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVN SEES - Movies</title>
+    <style>
+        /* Styles similar to the provided game page */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #222, #333, #444);
+            color: #fff;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(51, 51, 51, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #04d9ff;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        h1:hover {
+            color: #ff00ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+        #searchBar {
+            width: 80%;
+            padding: 10px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        .movie-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .movie-card {
+            width: 200px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+        .image-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(51, 51, 51, 0.9));
+            top: 0;
+            left: 0;
+        }
+        .movie-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            color: #fff;
+            background-color: #04d9ff;
+            border: none;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .movie-btn:hover {
+            background-color: #03a6cc;
+        }
+    </style>
+    <script>
+        const apiKey = '309fabbe'; // Your OMDb API key
+        const movieList = document.querySelector('.movie-list');
+
+        // Function to fetch movie data from OMDb API
+        function fetchMovieData(title) {
+            fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.Response === "True") {
+                        createMovieCard(data);
+                    } else {
+                        console.error('Movie not found:', title);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching movie data:', error);
+                });
+        }
+
+        // Create a movie card dynamically
+        function createMovieCard(data) {
+            const movieCard = document.createElement('div');
+            movieCard.classList.add('movie-card');
+            movieCard.setAttribute('data-title', data.Title);
+
+            const imageContainer = document.createElement('div');
+            imageContainer.classList.add('image-container');
+            const img = document.createElement('img');
+            img.src = data.Poster !== "N/A" ? data.Poster : 'fallback-image.jpg'; // Fallback image if poster not available
+            img.alt = data.Title;
+            imageContainer.appendChild(img);
+
+            const overlay = document.createElement('div');
+            overlay.classList.add('image-overlay');
+            imageContainer.appendChild(overlay);
+
+            const movieBtn = document.createElement('a');
+            movieBtn.href = "#";
+            movieBtn.classList.add('movie-btn');
+            movieBtn.innerText = data.Title;
+            movieBtn.onclick = () => showMovie(data.imdbID);
+
+            movieCard.appendChild(imageContainer);
+            movieCard.appendChild(movieBtn);
+            movieList.appendChild(movieCard);
+        }
+
+        // Function to show the movie via 123embed.net
+        function showMovie(imdbID) {
+            const container = document.querySelector('.container');
+            container.innerHTML = `<iframe src="https://play2.123embed.net/movie/${imdbID}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
+        }
+
+        // Function to filter movies by search term
+        function filterMovies() {
+            const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            const movieCards = document.querySelectorAll('.movie-card');
+
+            movieCards.forEach(card => {
+                const movieTitle = card.getAttribute('data-title').toLowerCase();
+                card.style.display = movieTitle.includes(searchTerm) ? 'flex' : 'none';
+            });
+        }
+
+        // Load sample movies (or you can dynamically add more)
+        window.onload = () => {
+            fetchMovieData("The Matrix");
+            fetchMovieData("Inception");
+            fetchMovieData("The Dark Knight");
+            fetchMovieData("Avengers: Endgame");
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>SVN SEES - Movies</h1>
+        <input type="text" id="searchBar" oninput="filterMovies()" placeholder="Search for a movie...">
+
+        <div class="movie-list">
+            <!-- Movie Cards will be displayed here dynamically -->
+        </div>
+    </div>
+</body>
+</html>
