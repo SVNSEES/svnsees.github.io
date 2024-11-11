@@ -17,27 +17,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(135deg, #222, #333, #444);
             color: #fff;
-            overflow-y: auto;
-            padding: 20px;
+            overflow: hidden;
         }
         /* Main content container */
         .container {
             text-align: center;
-            padding: 40px;
+            padding: 20px;
             background-color: rgba(51, 51, 51, 0.9);
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            max-width: 700px;
+            max-width: 800px;
             width: 90%;
         }
         /* Page title styling */
         h1 {
-            font-size: 3em;
+            font-size: 2.5em;
             color: #04d9ff;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             transition: color 0.3s ease;
         }
         /* Hover effect for title */
@@ -45,24 +44,41 @@
             color: #ff00ff;
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
         }
+        /* Search bar styling */
+        #searchBar {
+            width: 80%;
+            padding: 10px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            outline: none;
+        }
         /* Game list styling */
         .game-list {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            margin-top: 30px;
         }
-        /* Game item styling */
-        .game-item {
-            text-align: center;
+        /* Game card styling */
+        .game-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .game-card:hover {
+            transform: scale(1.05);
         }
         /* Game image styling */
-        .game-image {
+        .game-card img {
             width: 100%;
-            max-width: 150px;
-            height: 100px;
+            height: 150px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 5px;
             margin-bottom: 10px;
         }
         /* Game button styling */
@@ -75,52 +91,55 @@
             border: none;
             border-radius: 5px;
             text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.1s ease;
+            transition: background-color 0.3s ease;
         }
         /* Hover effect for buttons */
         .game-btn:hover {
             background-color: #03a6cc;
-            transform: scale(1.05);
-        }
-        /* Active button press effect */
-        .game-btn:active {
-            transform: scale(0.98);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        /* Optional subtitle */
-        p {
-            margin-top: 20px;
-            font-size: 1.1em;
-            color: #bbb;
         }
     </style>
+    <script>
+        function filterGames() {
+            const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            const gameCards = document.querySelectorAll('.game-card');
+
+            gameCards.forEach(card => {
+                const gameTitle = card.getAttribute('data-title').toLowerCase();
+                card.style.display = gameTitle.includes(searchTerm) ? 'flex' : 'none';
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>SVN SEES - Games</h1>
+        <!-- Search Bar -->
+        <input type="text" id="searchBar" oninput="filterGames()" placeholder="Search for a game...">
+
+        <!-- Game List -->
         <div class="game-list">
-            <!-- Goat Simulator -->
-            <div class="game-item">
-                <img src="istockphoto-1147544807-612x612.jpg" alt="Goat Simulator" class="game-image">
+            <!-- Game 1 -->
+            <div class="game-card" data-title="Goat Simulator">
+                <img src="istockphoto-1147544807-612x612.jpg" alt="Goat Simulator">
                 <a href="goatsim.html" class="game-btn">Goat Simulator</a>
             </div>
             <!-- Game 2 -->
-            <div class="game-item">
-                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 2" class="game-image">
-                <a href="game2.html" class="game-btn">Game 2</a>
+            <div class="game-card" data-title="Game 2">
+                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 2">
+                <a href="#" class="game-btn">Game 2</a>
             </div>
             <!-- Game 3 -->
-            <div class="game-item">
-                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 3" class="game-image">
-                <a href="game3.html" class="game-btn">Game 3</a>
+            <div class="game-card" data-title="Game 3">
+                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 3">
+                <a href="#" class="game-btn">Game 3</a>
             </div>
             <!-- Game 4 -->
-            <div class="game-item">
-                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 4" class="game-image">
-                <a href="game4.html" class="game-btn">Game 4</a>
+            <div class="game-card" data-title="Game 4">
+                <img src="istockphoto-1147544807-612x612.jpg" alt="Game 4">
+                <a href="#" class="game-btn">Game 4</a>
             </div>
+            <!-- Add more games as needed -->
         </div>
-        <p>Select a game to explore or download!</p>
     </div>
 </body>
 </html>
