@@ -149,31 +149,6 @@
         .game-btn:hover {
             background-color: #03a6cc;
         }
-
-        /* Marquee styling for slower scroll */
-        .marquee {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            font-size: 1.2em;
-            color: #ff4c4c;
-            overflow: hidden;
-            white-space: nowrap;
-            box-sizing: border-box;
-            animation: scroll-marquee 15s linear infinite; /* Slower scrolling speed */
-        }
-
-        @keyframes scroll-marquee {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -241,12 +216,35 @@
                 </div>
                 <a href="gamehtmls/Bloons TD 6.html" class="game-btn">Bloons TD 6</a>
             </div>
+            <div class="game-card" data-title="Forza Horizon 5">
+                <div class="image-container">
+                    <img src="imgs/forzahorizon5pic.jpg" alt="Forza Horizon 5">
+                    <div class="image-overlay"></div>
+                </div>
+                <a href="gamehtmls/forzahorizon5.html" class="game-btn">Forza Horizon 5</a>
+            </div>
+            <div class="game-card" data-title="Spider-Man">
+                <div class="image-container">
+                    <img src="imgs/spidermanpic.jpg" alt="Marvel’s Spider-Man Remastered">
+                    <div class="image-overlay"></div>
+                </div>
+                <a href="gamehtmls/spiderman.html" class="game-btn">Spider-Man</a>
+            </div>
+            <div class="game-card" data-title="Grand theft Auto VI">
+                <div class="image-container">
+                    <img src="imgs/gta6pic.jpg" alt="Grand theft auto VI">
+                    <div class="image-overlay"></div>
+                </div>
+                <a href="gamehtmls/gta6.html" class="game-btn">Grand theft auto VI</a>
+            </div>
+            <div class="game-card" data-title="High On Life">
+                <div class="image-container">
+                    <img src="imgs/highonlifepic.jpg" alt="High on life">
+                    <div class="image-overlay"></div>
+                </div>
+                <a href="gamehtmls/highonlife.html" class="game-btn">High on life</a>
+            </div>
         </div>
-    </div>
-
-    <!-- Marquee with hyperlink -->
-    <div class="marquee">
-        <a href="https://www.reddit.com/r/PiratedGames/comments/1glfbvy/buzzheavier_is_shutting_down/" target="_blank" style="color: #ff4c4c; text-decoration: none;">Game downloads are currently unavailable. More info here.</a>
     </div>
 </body>
 </html>
