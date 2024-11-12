@@ -22,24 +22,43 @@
             color: #fff;
             overflow: hidden;
         }
+        /* Loading animation */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            color: #04d9ff;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
         /* Main content container */
         .container {
             text-align: center;
             padding: 20px;
-            background-color: rgba(51, 51, 51, 0.9);
+            background-color: rgba(51, 51, 51, 0.95);
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             max-width: 800px;
             width: 90%;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: fadeIn 1s forwards 1s;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: scale(1); }
         }
         /* Page title styling */
         h1 {
             font-size: 2.5em;
             color: #04d9ff;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             transition: color 0.3s ease;
         }
-        /* Hover effect for title */
         h1:hover {
             color: #ff00ff;
             text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
@@ -53,6 +72,18 @@
             border-radius: 5px;
             margin-bottom: 20px;
             outline: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+        #searchBar:focus {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        /* Message for no results */
+        .no-results {
+            display: none;
+            color: #ff4c4c;
+            font-size: 1.2em;
+            margin-top: 20px;
         }
         /* Game list styling */
         .game-list {
@@ -63,17 +94,19 @@
         /* Game card styling with fixed size */
         .game-card {
             width: 200px;
-            height: 280px; /* Fixed height for uniform size */
+            height: 280px;
             display: flex;
             flex-direction: column;
             align-items: center;
             background-color: #333;
             border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.2s;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
         }
         .game-card:hover {
             transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
         }
         /* Game image styling with gradient overlay */
         .image-container {
@@ -86,7 +119,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
+            transition: transform 0.4s ease;
+        }
+        .image-container:hover img {
+            transform: scale(1.1);
         }
         .image-overlay {
             position: absolute;
@@ -108,32 +144,41 @@
             text-align: center;
             transition: background-color 0.3s ease;
         }
-        /* Hover effect for buttons */
         .game-btn:hover {
             background-color: #03a6cc;
         }
     </style>
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector(".loading").style.display = "none";
+        });
+
         function filterGames() {
             const searchTerm = document.getElementById('searchBar').value.toLowerCase();
             const gameCards = document.querySelectorAll('.game-card');
+            const noResultsMessage = document.querySelector('.no-results');
+            let hasVisibleCards = false;
 
             gameCards.forEach(card => {
                 const gameTitle = card.getAttribute('data-title').toLowerCase();
-                card.style.display = gameTitle.includes(searchTerm) ? 'flex' : 'none';
+                const isVisible = gameTitle.includes(searchTerm);
+                card.style.display = isVisible ? 'flex' : 'none';
+                if (isVisible) hasVisibleCards = true;
             });
+
+            noResultsMessage.style.display = hasVisibleCards ? 'none' : 'block';
         }
     </script>
 </head>
 <body>
+    <div class="loading">Loading...</div>
     <div class="container">
         <h1>SVN SEES - Games</h1>
         <!-- Search Bar -->
         <input type="text" id="searchBar" oninput="filterGames()" placeholder="Search for a game...">
-
+        <p class="no-results">No games found. Try a different search.</p>
         <!-- Game List -->
         <div class="game-list">
-            <!-- Game 1 -->
             <div class="game-card" data-title="Goat Simulator">
                 <div class="image-container">
                     <img src="goatsimpic.jpg" alt="Goat Simulator">
@@ -141,15 +186,13 @@
                 </div>
                 <a href="goatsim.html" class="game-btn">Goat Simulator</a>
             </div>
-            <!-- Game 2 -->
-            <div class="game-card" data-title="Sea of thieves">
+            <div class="game-card" data-title="Sea of Thieves">
                 <div class="image-container">
-                    <img src="seaofthievespic.jpg" alt="Sea of thieves">
+                    <img src="seaofthievespic.jpg" alt="Sea of Thieves">
                     <div class="image-overlay"></div>
                 </div>
-                <a href="seaofthieves.html" class="game-btn">Sea Of Thieves</a>
+                <a href="seaofthieves.html" class="game-btn">Sea of Thieves</a>
             </div>
-            <!-- Game 3 -->
             <div class="game-card" data-title="Red Dead Redemption 2">
                 <div class="image-container">
                     <img src="reddeadiipic.jpg" alt="Red Dead Redemption 2">
@@ -157,7 +200,6 @@
                 </div>
                 <a href="reddeadii.html" class="game-btn">Red Dead II</a>
             </div>
-            <!-- Game 4 -->
             <div class="game-card" data-title="Cyberpunk 2077">
                 <div class="image-container">
                     <img src="cyberpunk2k77pic.jpg" alt="Cyberpunk 2077">
@@ -165,9 +207,8 @@
                 </div>
                 <a href="cyberpunk2k77.html" class="game-btn">Cyberpunk 2077</a>
             </div>
-            
-            <!-- Add more games as needed -->
         </div>
     </div>
 </body>
 </html>
+
