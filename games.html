@@ -150,24 +150,28 @@
             background-color: #03a6cc;
         }
 
-        /* Marquee styling */
-        .marquee {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #333;
-            color: #ff4c4c;
-            font-size: 1.5em;
-            text-align: center;
-            padding: 10px 0;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
-            animation: marqueeAnimation 10s linear infinite;
-        }
+.marquee {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    font-size: 1.2em;
+    color: #ff4c4c;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    animation: scroll-marquee 15s linear infinite; /* Increase duration to slow down scrolling */
+}
 
-        @keyframes marqueeAnimation {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+@keyframes scroll-marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
     </style>
 </head>
 <body>
