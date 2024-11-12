@@ -276,7 +276,7 @@ async function openTvShowInNewTab(tvShowId) {
     if (imdbID) {
         window.open(`https://vidsrc.xyz/embed/tv/${imdbID}`, '_blank');
     } else {
-        alert('Shows are currently not supported! Sorry ):');
+        console.log('IMDb ID not found for this TV show. Cannot open in a new tab.');
     }
 }
 
