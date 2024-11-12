@@ -12,16 +12,16 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-        /* Full-page gradient background */
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #222, #333, #444);
-            color: #fff;
-            overflow: hidden;
-        }
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #222, #333, #444);
+        color: #fff;
+        overflow: hidden; /* Keep overflow hidden for body */
+    }
+
         /* Loading animation */
         .loading {
             position: absolute;
@@ -38,6 +38,8 @@
         }
         /* Main content container */
         .container {
+            max-height: 90vh; /* Limit the container height */
+            overflow-y: auto; /* Allow scrolling within the container */
             text-align: center;
             padding: 20px;
             background-color: rgba(51, 51, 51, 0.95);
