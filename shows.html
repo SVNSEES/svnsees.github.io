@@ -150,6 +150,28 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        /* Season & Episode Selector Styling */
+        .season-episode-selector {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .season-episode-selector select {
+            padding: 10px;
+            font-size: 1em;
+            margin: 5px;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+        }
+        .season-episode-selector button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #04d9ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -167,7 +189,7 @@
         <div class="tv-show-list" id="tv-show-list"></div>
     </div>
 
-    <!-- Popup for TV Show Description -->
+    <!-- Popup for TV Show Season and Episode Selector -->
     <div class="popup-overlay" id="popup-overlay">
         <div class="popup-content" id="popup-content">
             <h2 id="popup-title">TV Show Title</h2>
@@ -176,6 +198,14 @@
                 <p id="popup-release-date">Release Date: N/A</p>
                 <p id="popup-rating">Rating: N/A</p>
             </div>
+
+            <!-- Season and Episode Selector -->
+            <div class="season-episode-selector" id="season-episode-selector">
+                <select id="season-select"></select>
+                <select id="episode-select"></select>
+                <button id="watch-episode">Watch Episode</button>
+            </div>
+
             <button class="close-popup" id="close-popup">Close</button>
         </div>
     </div>
@@ -196,6 +226,10 @@ const popupDescription = document.getElementById('popup-description');
 const popupReleaseDate = document.getElementById('popup-release-date');
 const popupRating = document.getElementById('popup-rating');
 const closePopup = document.getElementById('close-popup');
+const seasonSelect = document.getElementById('season-select');
+const episodeSelect = document.getElementById('episode-select');
+const watchButton = document.getElementById('watch-episode');
+const seasonEpisodeSelector = document.getElementById('season-episode-selector');
 
 // Fetch Trending TV Shows and display them first
 async function fetchTrendingTvShows() {
@@ -239,7 +273,7 @@ function displayTvShows(tvShows, listElement) {
         // Make the TV show card clickable except the info icon
         tvShowItem.addEventListener('click', (e) => {
             if (!e.target.classList.contains('info-icon')) {
-                openTvShowInNewTab(tvShow.id);
+                openTvShowSelector(tvShow.id);
             }
         });
 
@@ -247,7 +281,7 @@ function displayTvShows(tvShows, listElement) {
     });
 }
 
-// Fetch and display TV show description in a popup
+// Fetch and display TV show description and season/episode selector
 async function showDescription(event, tvShowId) {
     event.stopPropagation(); // Prevent opening the TV show in a new tab
 
@@ -259,39 +293,78 @@ async function showDescription(event, tvShowId) {
     popupReleaseDate.textContent = `Release Date: ${tvShow.first_air_date || 'N/A'}`;
     popupRating.textContent = `Rating: ${tvShow.vote_average}/10`;
 
-    popupOverlay.style.display = 'flex'; // Show popup
+    // Show the popup
+    popupOverlay.style.display = 'flex';
+
+    // Fetch season and episode details
+    fetchSeasons(tvShowId);
 }
 
-// Close the popup
+// Fetch seasons for a TV show and populate the season dropdown
+async function fetchSeasons(tvShowId) {
+    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/season/1?api_key=${apiKey}`);
+    const tvShow = await response.json();
+
+    // Clear previous seasons and episodes
+    seasonSelect.innerHTML = '';
+    episodeSelect.innerHTML = '';
+
+    // Populate season dropdown
+    tvShow.seasons.forEach(season => {
+        const option = document.createElement('option');
+        option.value = season.season_number;
+        option.textContent = `Season ${season.season_number}`;
+        seasonSelect.appendChild(option);
+    });
+
+    // Handle season change
+    seasonSelect.addEventListener('change', () => {
+        fetchEpisodes(tvShowId, seasonSelect.value);
+    });
+
+    // Load episodes for the first season
+    fetchEpisodes(tvShowId, seasonSelect.value);
+}
+
+// Fetch episodes for a selected season
+async function fetchEpisodes(tvShowId, seasonNumber) {
+    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKey}`);
+    const season = await response.json();
+
+    // Clear previous episode options
+    episodeSelect.innerHTML = '';
+
+    season.episodes.forEach(episode => {
+        const option = document.createElement('option');
+        option.value = episode.episode_number;
+        option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
+        episodeSelect.appendChild(option);
+    });
+}
+
+// Event listener to close the popup
 closePopup.addEventListener('click', () => {
     popupOverlay.style.display = 'none';
 });
 
-// Open TV show in a new tab by IMDb ID
-async function openTvShowInNewTab(tvShowId) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}?api_key=${apiKey}`);
-    const tvShow = await response.json();
-    const imdbID = tvShow.imdb_id;
+// Event listener to watch the selected episode
+watchButton.addEventListener('click', () => {
+    const season = seasonSelect.value;
+    const episode = episodeSelect.value;
 
-    if (imdbID) {
-        window.open(`https://vidsrc.xyz/embed/tv/${imdbID}`, '_blank');
-    } else {
-        alert('Shows are currently not supported! Sorry ):');
-    }
-}
+    alert(`Watch Season ${season}, Episode ${episode}`);
+});
 
-// Event listeners
+// Event listeners for search input
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.trim();
     
-    // If there is a query, hide the trending TV shows and show search results
     if (query) {
         trendingTvShowsList.style.display = 'none';
         fetchTvShows(query);
     } else {
-        // If there's no query, show the trending TV shows again
         trendingTvShowsList.style.display = 'block';
-        tvShowList.innerHTML = ''; // Clear any previous search results
+        tvShowList.innerHTML = '';
     }
 });
 
