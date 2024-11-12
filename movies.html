@@ -125,6 +125,7 @@
         }
         .popup-content h2 {
             color: #04d9ff;
+            margin-bottom: 10px;
         }
         .close-popup {
             margin-top: 10px;
@@ -153,6 +154,8 @@
         <div class="popup-content" id="popup-content">
             <h2 id="popup-title">Movie Title</h2>
             <p id="popup-description">Movie Description</p>
+            <p id="popup-release-date">Release Date: N/A</p>
+            <p id="popup-rating">Rating: N/A</p>
             <span class="close-popup" id="close-popup">Close</span>
         </div>
     </div>
@@ -170,6 +173,8 @@ const trendingMoviesList = document.getElementById('trending-movies');
 const popupOverlay = document.getElementById('popup-overlay');
 const popupTitle = document.getElementById('popup-title');
 const popupDescription = document.getElementById('popup-description');
+const popupReleaseDate = document.getElementById('popup-release-date');
+const popupRating = document.getElementById('popup-rating');
 const closePopup = document.getElementById('close-popup');
 
 // Fetch Trending Movies and display them first
@@ -208,20 +213,30 @@ function displayMovies(movies, listElement) {
         movieItem.innerHTML = `
             <img src="${poster}" alt="${title}">
             <h3>${title}</h3>
-            <span class="info-icon" onclick="showDescription(${movie.id})">?</span>
+            <span class="info-icon" onclick="showDescription(event, ${movie.id})">?</span>
         `;
+
+        // Make the movie card clickable except the info icon
+        movieItem.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('info-icon')) {
+                openMovieInNewTab(movie.id);
+            }
+        });
 
         listElement.appendChild(movieItem);
     });
 }
 
 // Fetch and display movie description in a popup
-async function showDescription(movieId) {
+async function showDescription(event, movieId) {
+    event.stopPropagation(); // Prevent triggering the movie card click event
     const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`);
     const movie = await response.json();
     
     popupTitle.textContent = movie.title;
     popupDescription.textContent = movie.overview || "No description available.";
+    popupReleaseDate.textContent = `Release Date: ${movie.release_date || "N/A"}`;
+    popupRating.textContent = `Rating: ${movie.vote_average || "N/A"}`;
     popupOverlay.style.display = 'flex'; // Show popup
 }
 
@@ -229,6 +244,19 @@ async function showDescription(movieId) {
 closePopup.addEventListener('click', () => {
     popupOverlay.style.display = 'none';
 });
+
+// Open movie in a new tab by IMDb ID
+async function openMovieInNewTab(movieId) {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`);
+    const movie = await response.json();
+    const imdbID = movie.imdb_id;
+
+    if (imdbID) {
+        window.open(`https://vidsrc.xyz/embed/movie/${imdbID}`, '_blank');
+    } else {
+        alert("IMDb link not available for this movie.");
+    }
+}
 
 // Event listeners
 searchInput.addEventListener('input', () => {
