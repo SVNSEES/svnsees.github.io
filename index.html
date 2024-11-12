@@ -70,7 +70,7 @@
             text-decoration: none;
             width: 40%;
             text-align: center;
-            transition: background-color 0.3s ease, transform 0.1s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         /* Button hover effects */
@@ -117,6 +117,12 @@
         .logo {
             width: 100px; /* Adjust width as needed */
             height: auto;
+            cursor: pointer;
+        }
+
+        /* Hover effect for expanding buttons when hovering over logo */
+        .logo:hover + .button-container .btn {
+            transform: scale(1.2);
         }
 
         /* Subtitle styling (optional) */
