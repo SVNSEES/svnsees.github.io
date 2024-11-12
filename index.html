@@ -33,7 +33,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             max-width: 500px;
             width: 90%;
-            display: none; /* Hide content initially */
         }
 
         /* Page title styling */
@@ -126,55 +125,10 @@
             font-size: 1.1em;
             color: #bbb;
         }
-
-        /* Password prompt styling */
-        .password-prompt {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #fff;
-        }
-
-        .password-prompt input {
-            padding: 10px;
-            font-size: 1.2em;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #fff;
-        }
-
-        .password-prompt button {
-            padding: 10px 20px;
-            font-size: 1.2em;
-            background-color: #04d9ff;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .password-prompt button:hover {
-            background-color: #03a6cc;
-        }
     </style>
 </head>
 <body>
-    <!-- Password prompt -->
-    <div class="password-prompt" id="passwordPrompt">
-        <h2>Please enter the password</h2>
-        <input type="password" id="passwordInput" placeholder="Password">
-        <button onclick="checkPassword()">Submit</button>
-    </div>
-
-    <!-- Content container -->
-    <div class="container" id="contentContainer">
+    <div class="container">
         <h1>SVN SEES</h1>
         <div class="button-container">
             <a href="games.html" class="btn">Games</a>
@@ -186,19 +140,7 @@
         <a href="shows.html" class="btn-small">Shows</a>
         <p>Choose your category to explore more!</p>
     </div>
-
-    <script>
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            const correctPassword = '1234';
-            if (password === correctPassword) {
-                // Hide the password prompt and show the content
-                document.getElementById('passwordPrompt').style.display = 'none';
-                document.getElementById('contentContainer').style.display = 'block';
-            } else {
-                alert('Incorrect password. Please try again.');
-            }
-        }
-    </script>
 </body>
 </html>
+
+
