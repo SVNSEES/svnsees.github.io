@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
 }
 
 /* Full-page gradient background */
@@ -21,16 +21,16 @@ body {
 /* Fade-in effect for container */
 .container {
     text-align: center;
-    padding: 20px;
+    padding: 30px;
     background-color: rgba(51, 51, 51, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
     max-width: 400px;
     width: 90%;
     opacity: 0;
     transform: translateY(-20px);
     animation: fadeIn 1s forwards;
-    position: relative; /* Allow absolute positioning inside */
+    position: relative;
 }
 
 /* Keyframes for fade-in */
@@ -43,11 +43,11 @@ body {
 
 /* Page title styling */
 h1 {
-    font-size: 2.5em;
+    font-size: 2.8em;
     color: #04d9ff;
     margin-bottom: 10px;
     position: relative;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 /* Subtitle styling */
@@ -60,15 +60,16 @@ p {
 /* Hover effect for title */
 h1:hover {
     color: #ff00ff;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+    transform: scale(1.05);
 }
 
 /* Animated download icon */
 .icon {
-    font-size: 2.5em;
+    font-size: 3em;
     color: #04d9ff;
     animation: bounce 1.5s infinite;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 /* Bounce animation for icon */
@@ -77,27 +78,28 @@ h1:hover {
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-10px);
+        transform: translateY(-15px);
     }
 }
 
 /* Download button styling */
 .download-btn {
     display: inline-block;
-    padding: 12px 30px;
+    padding: 14px 32px;
     font-size: 1.2em;
     color: #fff;
     background-color: #04d9ff;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.1s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Hover effect for button */
 .download-btn:hover {
     background-color: #03a6cc;
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
 /* Active button press effect */
@@ -106,35 +108,42 @@ h1:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Styling for the question mark and description */
+/* Question mark styling */
 .question-mark {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5em;
+    top: 5px;
+    right: 5px;
+    font-size: 1.6em;
     cursor: pointer;
+    color: #04d9ff;
+    transition: transform 0.3s ease;
 }
 
-/* Tooltip style - expands to the right */
+/* Tooltip style */
 .tooltip {
     display: none;
     position: absolute;
-    top: 0;
-    left: 100%; /* Positioned to the right of the question mark */
-    margin-left: 10px; /* Adds a small gap */
-    background-color: rgba(0, 0, 0, 0.7);
+    top: -10px;
+    left: 100%;
+    margin-left: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 6px;
     font-size: 1em;
-    width: 200px;
-    transform: scaleX(0); /* Initially scaled down */
-    transform-origin: left; /* The tooltip will expand to the right */
+    width: 220px;
+    transform: scaleX(0);
+    transform-origin: left;
     transition: transform 0.3s ease-in-out;
 }
 
 /* Show tooltip when hovering */
 .question-mark:hover + .tooltip {
     display: block;
-    transform: scaleX(1); /* Expands the tooltip to its full width */
+    transform: scaleX(1);
+}
+
+/* Add some subtle effect when hovering over question mark */
+.question-mark:hover {
+    transform: scale(1.1);
 }
