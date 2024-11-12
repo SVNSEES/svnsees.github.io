@@ -74,6 +74,7 @@
             overflow: hidden;
             transition: transform 0.2s;
             cursor: pointer;
+            position: relative;
         }
         .tv-show-item:hover {
             transform: scale(1.05);
@@ -88,9 +89,66 @@
             font-size: 1.1em;
             margin-top: 10px;
         }
-        /* Hide iframe (no longer necessary) */
-        #tv-show-player {
+        /* Question mark icon styling */
+        .info-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            color: #04d9ff;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            padding: 5px;
+        }
+        /* Popup overlay styling */
+        .popup-overlay {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        /* Popup content styling */
+        .popup-content {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            color: #fff;
+            text-align: left;
+        }
+        .popup-content h2 {
+            color: #04d9ff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        /* Styled information sections */
+        .popup-info {
+            margin-top: 10px;
+            border-top: 1px solid #555;
+            padding-top: 10px;
+            line-height: 1.6;
+        }
+        .popup-info p {
+            margin: 5px 0;
+        }
+        .close-popup {
+            display: block;
+            margin: 20px auto 0;
+            padding: 8px 16px;
+            background-color: #ff00ff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -109,6 +167,19 @@
         <div class="tv-show-list" id="tv-show-list"></div>
     </div>
 
+    <!-- Popup for TV Show Description -->
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup-content" id="popup-content">
+            <h2 id="popup-title">TV Show Title</h2>
+            <div class="popup-info" id="popup-description">TV Show Description</div>
+            <div class="popup-info">
+                <p id="popup-release-date">Release Date: N/A</p>
+                <p id="popup-rating">Rating: N/A</p>
+            </div>
+            <button class="close-popup" id="close-popup">Close</button>
+        </div>
+    </div>
+
     <script>
 const apiKey = '330845779e6588abc657b964887317fb'; // TMDb API key
 const trendingApiUrl = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}`;
@@ -117,6 +188,14 @@ const searchApiUrl = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&l
 const searchInput = document.getElementById('search-input');
 const tvShowList = document.getElementById('tv-show-list');
 const trendingTvShowsList = document.getElementById('trending-tv-shows');
+
+// Popup elements
+const popupOverlay = document.getElementById('popup-overlay');
+const popupTitle = document.getElementById('popup-title');
+const popupDescription = document.getElementById('popup-description');
+const popupReleaseDate = document.getElementById('popup-release-date');
+const popupRating = document.getElementById('popup-rating');
+const closePopup = document.getElementById('close-popup');
 
 // Fetch Trending TV Shows and display them first
 async function fetchTrendingTvShows() {
@@ -154,15 +233,39 @@ function displayTvShows(tvShows, listElement) {
         tvShowItem.innerHTML = `
             <img src="${poster}" alt="${title}">
             <h3>${title}</h3>
+            <span class="info-icon" onclick="showDescription(event, ${tvShow.id})">?</span>
         `;
 
-        tvShowItem.addEventListener('click', () => {
-            openTvShowInNewTab(tvShow.id);
+        // Make the TV show card clickable except the info icon
+        tvShowItem.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('info-icon')) {
+                openTvShowInNewTab(tvShow.id);
+            }
         });
 
         listElement.appendChild(tvShowItem);
     });
 }
+
+// Fetch and display TV show description in a popup
+async function showDescription(event, tvShowId) {
+    event.stopPropagation(); // Prevent opening the TV show in a new tab
+
+    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}?api_key=${apiKey}`);
+    const tvShow = await response.json();
+
+    popupTitle.textContent = tvShow.name;
+    popupDescription.textContent = tvShow.overview || 'No description available.';
+    popupReleaseDate.textContent = `Release Date: ${tvShow.first_air_date || 'N/A'}`;
+    popupRating.textContent = `Rating: ${tvShow.vote_average}/10`;
+
+    popupOverlay.style.display = 'flex'; // Show popup
+}
+
+// Close the popup
+closePopup.addEventListener('click', () => {
+    popupOverlay.style.display = 'none';
+});
 
 // Open TV show in a new tab by IMDb ID
 async function openTvShowInNewTab(tvShowId) {
@@ -172,8 +275,6 @@ async function openTvShowInNewTab(tvShowId) {
 
     if (imdbID) {
         window.open(`https://vidsrc.xyz/embed/tv/${imdbID}`, '_blank');
-        //window.open(`https://vidsrc.net/embed/${imdbID}`, '_blank');
-        // window.open(`https://play2.123embed.net/tv/${imdbID}`, '_blank');
     } else {
         alert('Shows are currently not supported! Sorry ):');
     }
@@ -196,8 +297,6 @@ searchInput.addEventListener('input', () => {
 
 // Fetch trending TV shows on page load
 fetchTrendingTvShows();
-
-
     </script>
 
 </body>
