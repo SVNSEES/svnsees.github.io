@@ -101,7 +101,7 @@
             border-radius: 50%;
             padding: 5px;
         }
-        /* Popup styling */
+        /* Popup overlay styling */
         .popup-overlay {
             display: none;
             position: fixed;
@@ -114,6 +114,7 @@
             align-items: center;
             z-index: 10;
         }
+        /* Popup content styling */
         .popup-content {
             background: #333;
             padding: 20px;
@@ -121,15 +122,32 @@
             max-width: 500px;
             width: 90%;
             color: #fff;
-            text-align: center;
+            text-align: left;
         }
         .popup-content h2 {
             color: #04d9ff;
             margin-bottom: 10px;
+            text-align: center;
+        }
+        /* Styled information sections */
+        .popup-info {
+            margin-top: 10px;
+            border-top: 1px solid #555;
+            padding-top: 10px;
+            line-height: 1.6;
+        }
+        .popup-info p {
+            margin: 5px 0;
         }
         .close-popup {
-            margin-top: 10px;
-            color: #ff00ff;
+            display: block;
+            margin: 20px auto 0;
+            padding: 8px 16px;
+            background-color: #ff00ff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
     </style>
@@ -153,10 +171,12 @@
     <div class="popup-overlay" id="popup-overlay">
         <div class="popup-content" id="popup-content">
             <h2 id="popup-title">Movie Title</h2>
-            <p id="popup-description">Movie Description</p>
-            <p id="popup-release-date">Release Date: N/A</p>
-            <p id="popup-rating">Rating: N/A</p>
-            <span class="close-popup" id="close-popup">Close</span>
+            <div class="popup-info" id="popup-description">Movie Description</div>
+            <div class="popup-info">
+                <p id="popup-release-date">Release Date: N/A</p>
+                <p id="popup-rating">Rating: N/A</p>
+            </div>
+            <button class="close-popup" id="close-popup">Close</button>
         </div>
     </div>
 
@@ -236,11 +256,12 @@ async function showDescription(event, movieId) {
     popupTitle.textContent = movie.title;
     popupDescription.textContent = movie.overview || "No description available.";
     popupReleaseDate.textContent = `Release Date: ${movie.release_date || "N/A"}`;
-    popupRating.textContent = `Rating: ${movie.vote_average || "N/A"}`;
+    popupRating.textContent = `Rating: ${movie.vote_average}/10`;
+    
     popupOverlay.style.display = 'flex'; // Show popup
 }
 
-// Close the popup when clicking the close button
+// Close the popup
 closePopup.addEventListener('click', () => {
     popupOverlay.style.display = 'none';
 });
