@@ -150,27 +150,13 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        /* Season & Episode Selector Styling */
-        .season-episode-selector {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .season-episode-selector select {
-            padding: 10px;
+        /* Selector styling */
+        .popup-content select {
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            width: 100%;
             font-size: 1em;
-            margin: 5px;
-            border-radius: 5px;
-            background-color: #444;
-            color: #fff;
-        }
-        .season-episode-selector button {
-            padding: 10px 20px;
-            font-size: 1.2em;
-            background-color: #04d9ff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -189,7 +175,7 @@
         <div class="tv-show-list" id="tv-show-list"></div>
     </div>
 
-    <!-- Popup for TV Show Season and Episode Selector -->
+    <!-- Popup for TV Show Description -->
     <div class="popup-overlay" id="popup-overlay">
         <div class="popup-content" id="popup-content">
             <h2 id="popup-title">TV Show Title</h2>
@@ -199,177 +185,175 @@
                 <p id="popup-rating">Rating: N/A</p>
             </div>
 
-            <!-- Season and Episode Selector -->
-            <div class="season-episode-selector" id="season-episode-selector">
-                <select id="season-select"></select>
-                <select id="episode-select"></select>
-                <button id="watch-episode">Watch Episode</button>
-            </div>
+            <!-- Season and Episode Selectors -->
+            <label for="season-select">Select Season:</label>
+            <select id="season-select"></select>
+
+            <label for="episode-select">Select Episode:</label>
+            <select id="episode-select"></select>
 
             <button class="close-popup" id="close-popup">Close</button>
+            <button id="watch-button">Watch Episode</button>
         </div>
     </div>
 
     <script>
-const apiKey = '330845779e6588abc657b964887317fb'; // TMDb API key
-const trendingApiUrl = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}`;
-const searchApiUrl = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&query=`;
+        const apiKey = '330845779e6588abc657b964887317fb'; // TMDb API key
+        const trendingApiUrl = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}`;
+        const searchApiUrl = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&query=`;
 
-const searchInput = document.getElementById('search-input');
-const tvShowList = document.getElementById('tv-show-list');
-const trendingTvShowsList = document.getElementById('trending-tv-shows');
+        const searchInput = document.getElementById('search-input');
+        const tvShowList = document.getElementById('tv-show-list');
+        const trendingTvShowsList = document.getElementById('trending-tv-shows');
 
-// Popup elements
-const popupOverlay = document.getElementById('popup-overlay');
-const popupTitle = document.getElementById('popup-title');
-const popupDescription = document.getElementById('popup-description');
-const popupReleaseDate = document.getElementById('popup-release-date');
-const popupRating = document.getElementById('popup-rating');
-const closePopup = document.getElementById('close-popup');
-const seasonSelect = document.getElementById('season-select');
-const episodeSelect = document.getElementById('episode-select');
-const watchButton = document.getElementById('watch-episode');
-const seasonEpisodeSelector = document.getElementById('season-episode-selector');
+        // Popup elements
+        const popupOverlay = document.getElementById('popup-overlay');
+        const popupTitle = document.getElementById('popup-title');
+        const popupDescription = document.getElementById('popup-description');
+        const popupReleaseDate = document.getElementById('popup-release-date');
+        const popupRating = document.getElementById('popup-rating');
+        const closePopup = document.getElementById('close-popup');
+        const watchButton = document.getElementById('watch-button');
+        const seasonSelect = document.getElementById('season-select');
+        const episodeSelect = document.getElementById('episode-select');
 
-// Fetch Trending TV Shows and display them first
-async function fetchTrendingTvShows() {
-    const response = await fetch(trendingApiUrl);
-    const data = await response.json();
-    const trendingTvShows = data.results;
-    displayTvShows(trendingTvShows, trendingTvShowsList);
-}
+        // Fetch Trending TV Shows and display them first
+        async function fetchTrendingTvShows() {
+            const response = await fetch(trendingApiUrl);
+            const data = await response.json();
+            const trendingTvShows = data.results;
+            displayTvShows(trendingTvShows, trendingTvShowsList);
+        }
 
-// Fetch and display TV shows based on search query
-async function fetchTvShows(query) {
-    const response = await fetch(`${searchApiUrl}${encodeURIComponent(query)}`);
-    const data = await response.json();
-    const tvShows = data.results;
-    displayTvShows(tvShows, tvShowList);
-}
+        // Fetch and display TV shows based on search query
+        async function fetchTvShows(query) {
+            const response = await fetch(`${searchApiUrl}${encodeURIComponent(query)}`);
+            const data = await response.json();
+            const tvShows = data.results;
+            displayTvShows(tvShows, tvShowList);
+        }
 
-// Function to display TV show cards
-function displayTvShows(tvShows, listElement) {
-    listElement.innerHTML = ''; // Clear previous results
+        // Function to display TV show cards
+        function displayTvShows(tvShows, listElement) {
+            listElement.innerHTML = ''; // Clear previous results
 
-    if (tvShows.length === 0) {
-        listElement.innerHTML = '<p>No TV shows found!</p>';
-        return;
-    }
+            if (tvShows.length === 0) {
+                listElement.innerHTML = '<p>No TV shows found!</p>';
+                return;
+            }
 
-    tvShows.forEach(tvShow => {
-        const tvShowItem = document.createElement('div');
-        tvShowItem.classList.add('tv-show-item');
-        tvShowItem.dataset.id = tvShow.id;
+            tvShows.forEach(tvShow => {
+                const tvShowItem = document.createElement('div');
+                tvShowItem.classList.add('tv-show-item');
+                tvShowItem.dataset.id = tvShow.id;
 
-        const poster = `https://image.tmdb.org/t/p/w200${tvShow.poster_path || ''}`;
-        const title = tvShow.name || 'Unknown Title';
+                const poster = `https://image.tmdb.org/t/p/w200${tvShow.poster_path || ''}`;
+                const title = tvShow.name || 'Unknown Title';
+                
+                tvShowItem.innerHTML = `
+                    <img src="${poster}" alt="${title}">
+                    <h3>${title}</h3>
+                    <span class="info-icon">?</span>
+                `;
 
-        tvShowItem.innerHTML = `
-            <img src="${poster}" alt="${title}">
-            <h3>${title}</h3>
-            <span class="info-icon" onclick="showDescription(event, ${tvShow.id})">?</span>
-        `;
+                // Add the TV show card to the list
+                listElement.appendChild(tvShowItem);
 
-        // Make the TV show card clickable except the info icon
-        tvShowItem.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('info-icon')) {
-                openTvShowSelector(tvShow.id);
+                // Add event listener to show details on click
+                tvShowItem.addEventListener('click', () => openTvShowSelector(tvShow.id));
+            });
+        }
+
+        // Function to open the TV show selector popup and fetch the seasons and episodes
+        async function openTvShowSelector(tvShowId) {
+            // Fetch TV show details to display in the popup
+            const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}?api_key=${apiKey}`);
+            const tvShow = await response.json();
+
+            // Populate the popup with the TV show data
+            popupTitle.textContent = tvShow.name;
+            popupDescription.textContent = tvShow.overview || 'No description available.';
+            popupReleaseDate.textContent = `Release Date: ${tvShow.first_air_date || 'N/A'}`;
+            popupRating.textContent = `Rating: ${tvShow.vote_average}/10`;
+
+            // Show the popup overlay
+            popupOverlay.style.display = 'flex';
+
+            // Fetch seasons for the TV show and populate the season selector
+            fetchSeasons(tvShowId);
+        }
+
+        // Fetch seasons for a TV show and populate the season dropdown
+        async function fetchSeasons(tvShowId) {
+            const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}?api_key=${apiKey}`);
+            const tvShow = await response.json();
+
+            // Clear previous seasons and episodes
+            seasonSelect.innerHTML = '';
+            episodeSelect.innerHTML = '';
+
+            // Populate season dropdown
+            tvShow.seasons.forEach(season => {
+                const option = document.createElement('option');
+                option.value = season.season_number;
+                option.textContent = `Season ${season.season_number}`;
+                seasonSelect.appendChild(option);
+            });
+
+            // Handle season change
+            seasonSelect.addEventListener('change', () => {
+                fetchEpisodes(tvShowId, seasonSelect.value);
+            });
+
+            // Load episodes for the first season
+            fetchEpisodes(tvShowId, seasonSelect.value);
+        }
+
+        // Fetch episodes for a selected season
+        async function fetchEpisodes(tvShowId, seasonNumber) {
+            const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKey}`);
+            const season = await response.json();
+
+            // Clear previous episode options
+            episodeSelect.innerHTML = '';
+
+            season.episodes.forEach(episode => {
+                const option = document.createElement('option');
+                option.value = episode.episode_number;
+                option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
+                episodeSelect.appendChild(option);
+            });
+        }
+
+        // Watch button click event to redirect to the stream link
+        watchButton.addEventListener('click', () => {
+            const tvShowId = tvShowList.querySelector('.tv-show-item').dataset.id;
+            const seasonNumber = seasonSelect.value;
+            const episodeNumber = episodeSelect.value;
+
+            if (seasonNumber && episodeNumber) {
+                const url = `https://play2.123embed.net/tv/${tvShowId}/${seasonNumber}/${episodeNumber}`;
+                window.open(url, '_blank');
             }
         });
 
-        listElement.appendChild(tvShowItem);
-    });
-}
+        // Close popup event
+        closePopup.addEventListener('click', () => {
+            popupOverlay.style.display = 'none';
+        });
 
-// Fetch and display TV show description and season/episode selector
-async function showDescription(event, tvShowId) {
-    event.stopPropagation(); // Prevent opening the TV show in a new tab
+        // Event listener for search input
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            if (query.length > 2) {
+                fetchTvShows(query);
+            } else {
+                fetchTrendingTvShows();
+            }
+        });
 
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}?api_key=${apiKey}`);
-    const tvShow = await response.json();
-
-    popupTitle.textContent = tvShow.name;
-    popupDescription.textContent = tvShow.overview || 'No description available.';
-    popupReleaseDate.textContent = `Release Date: ${tvShow.first_air_date || 'N/A'}`;
-    popupRating.textContent = `Rating: ${tvShow.vote_average}/10`;
-
-    // Show the popup
-    popupOverlay.style.display = 'flex';
-
-    // Fetch season and episode details
-    fetchSeasons(tvShowId);
-}
-
-// Fetch seasons for a TV show and populate the season dropdown
-async function fetchSeasons(tvShowId) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/season/1?api_key=${apiKey}`);
-    const tvShow = await response.json();
-
-    // Clear previous seasons and episodes
-    seasonSelect.innerHTML = '';
-    episodeSelect.innerHTML = '';
-
-    // Populate season dropdown
-    tvShow.seasons.forEach(season => {
-        const option = document.createElement('option');
-        option.value = season.season_number;
-        option.textContent = `Season ${season.season_number}`;
-        seasonSelect.appendChild(option);
-    });
-
-    // Handle season change
-    seasonSelect.addEventListener('change', () => {
-        fetchEpisodes(tvShowId, seasonSelect.value);
-    });
-
-    // Load episodes for the first season
-    fetchEpisodes(tvShowId, seasonSelect.value);
-}
-
-// Fetch episodes for a selected season
-async function fetchEpisodes(tvShowId, seasonNumber) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKey}`);
-    const season = await response.json();
-
-    // Clear previous episode options
-    episodeSelect.innerHTML = '';
-
-    season.episodes.forEach(episode => {
-        const option = document.createElement('option');
-        option.value = episode.episode_number;
-        option.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
-        episodeSelect.appendChild(option);
-    });
-}
-
-// Event listener to close the popup
-closePopup.addEventListener('click', () => {
-    popupOverlay.style.display = 'none';
-});
-
-// Event listener to watch the selected episode
-watchButton.addEventListener('click', () => {
-    const season = seasonSelect.value;
-    const episode = episodeSelect.value;
-
-    alert(`Watch Season ${season}, Episode ${episode}`);
-});
-
-// Event listeners for search input
-searchInput.addEventListener('input', () => {
-    const query = searchInput.value.trim();
-    
-    if (query) {
-        trendingTvShowsList.style.display = 'none';
-        fetchTvShows(query);
-    } else {
-        trendingTvShowsList.style.display = 'block';
-        tvShowList.innerHTML = '';
-    }
-});
-
-// Fetch trending TV shows on page load
-fetchTrendingTvShows();
+        // Initial fetch for trending TV shows
+        fetchTrendingTvShows();
     </script>
 
 </body>
