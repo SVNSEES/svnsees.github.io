@@ -325,7 +325,7 @@
             const episodeNumber = episodeSelect.value;
 
             if (seasonNumber && episodeNumber) {
-                const url = `https://v2.vidsrc.xyz/embed/${tvShowId}/${seasonNumber}-${episodeNumber}`;
+                const url = `https://v2.vidsrc.xyz/embed/tv?imdb=${tvShowId}/${seasonNumber}-${episodeNumber}`;
                 window.open(url, '_blank');
             }
         });
